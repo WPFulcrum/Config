@@ -16,7 +16,8 @@
     }
   ],
   "require": {
-    "php": "^5.6||^7"
+    "php": "^5.6||^7",
+    "wpfulcrum/extender": "^3"
   },
   "autoload": {
     "psr-4": {
@@ -42,8 +43,7 @@
     "sebastian/phpcpd": "^3.0",
     "povils/phpmnd": "^1.1",
     "sensiolabs/security-checker": "^4.0",
-    "nikic/php-parser": "^3.0",
-    "wpfulcrum/extender": "^3"
+    "nikic/php-parser": "^3.0"
   },
   "config": {
     "sort-order": true
