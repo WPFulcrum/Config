@@ -70,10 +70,10 @@ Let's use the configuration example from above, which is for a QA shortcode:
 
 return [
 	'autoload'  => true,
-	'classname' => 'Fulcrum\FulcrumSite\Shortcode\QA',
+	'classname' => 'YourBrand\YourProject\Shortcode\QA',
 	'config'    => [
 		'shortcode' => 'qa',
-		'view'      => FULCRUMSITE_PATH . 'src/Shortcode/views/qa.php',
+		'view'      => YOURPLUGIN_PATH . 'src/Shortcode/views/qa.php',
 		'defaults'  => [
 			'id'         => '',
 			'class'      => '',
