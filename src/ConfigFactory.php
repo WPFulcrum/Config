@@ -13,10 +13,11 @@ class ConfigFactory
      *                                  configuration array.
      * @param  string|array $defaults Specify a defaults array, which is then merged together
      *                                  with the initial config array before creating the object.
+     *
      * @returns Fulcrum Returns the Config object
      */
     public static function create($config, $defaults = '')
     {
-        return new Repository($config, $defaults);
+        return new Config($config, $defaults);
     }
 }

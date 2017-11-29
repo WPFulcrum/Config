@@ -3,8 +3,7 @@
 namespace Fulcrum\Config;
 
 use ArrayObject;
-use InvalidArgumentException;
-use RuntimeException;
+use Fulcrum\Config\Exception\InvalidSourceException;
 use Fulcrum\Extender\Arr\DotArray;
 
 class Config extends ArrayObject implements ConfigContract
@@ -32,6 +31,8 @@ class Config extends ArrayObject implements ConfigContract
      */
     public function __construct($config, $defaults = '')
     {
+        $this->checkSources($config, $defaults);
+
         $this->items = $this->fetchParameters($config);
         $this->initDefaults($defaults);
 
@@ -45,6 +46,7 @@ class Config extends ArrayObject implements ConfigContract
      * @since 3.0.0
      *
      * @param string|array $defaults
+     *
      * @return null
      */
     protected function initDefaults($defaults)
@@ -65,14 +67,22 @@ class Config extends ArrayObject implements ConfigContract
      * @param string|array $locationOrArray Parameters location or array.
      *
      * @return array
+     * @throw InvalidConfigException
      */
     protected function fetchParameters($locationOrArray)
     {
+        // Yup, it's an array. Return it.
         if (is_array($locationOrArray)) {
             return $locationOrArray;
         }
 
-        return $this->loadFile($locationOrArray);
+        // It's a file.
+        $maybeConfig = require $locationOrArray;
+
+        Validator::mustBeAnArray($maybeConfig);
+        Validator::mustNotBeEmpty($maybeConfig);
+
+        return $maybeConfig;
     }
 
     /**
@@ -81,6 +91,7 @@ class Config extends ArrayObject implements ConfigContract
      * @since 3.0.0
      *
      * @param array $defaults
+     *
      * @return null
      */
     protected function initDefaultsInConfigArray(array $defaults)
@@ -110,6 +121,7 @@ class Config extends ArrayObject implements ConfigContract
      * @since 3.0.0
      *
      * @param  string $parameterKey Parameter key, specified in dot notation, i.e. key.key.key
+     *
      * @return bool
      */
     public function has($parameterKey)
@@ -122,12 +134,17 @@ class Config extends ArrayObject implements ConfigContract
      *
      * @since 3.0.0
      *
-     * @param  string $parameterKey Parameter key, specified in dot notation, i.e. key.key.key
+     * @param  string|array $parameterKey Parameter key, specified in dot notation, i.e. key.key.key
      * @param  mixed $default
+     *
      * @return mixed
      */
     public function get($parameterKey, $default = null)
     {
+        if (is_array($parameterKey)) {
+            return $this->getParameters($parameterKey);
+        }
+
         return DotArray::get($this->items, $parameterKey, $default);
     }
 
@@ -140,15 +157,16 @@ class Config extends ArrayObject implements ConfigContract
      * @since 3.0.0
      *
      * @param string $dotNotationKeys
-     * @param bool $validWhenEmpty
+     * @param bool|null $validWhenEmpty
+     *
      * @return bool
      */
-    public function isArray($dotNotationKeys, $validWhenEmpty = true)
+    public function isArray($dotNotationKeys, $validWhenEmpty = null)
     {
         $value = DotArray::get($this->items, $dotNotationKeys);
 
         // If it's not valid when empty, check it here.
-        if (false === $validWhenEmpty && empty($value) ) {
+        if (false === $validWhenEmpty && empty($value)) {
             return false;
         }
 
@@ -156,51 +174,39 @@ class Config extends ArrayObject implements ConfigContract
     }
 
     /**
-     * Valid the Config.
+     * Merge a new array into this config
      *
      * @since 3.0.0
      *
-     * @return bool
+     * @param array $arrayToMerge The array to merge into the collection.
+     *
+     * @return void
      */
-    public function isValid()
+    public function merge(array $arrayToMerge)
     {
-        if ($this->validator) {
-            return $this->validator->isValid($this);
-        }
+        $this->items = array_replace_recursive($this->items, $arrayToMerge);
 
-        return true;
+        array_walk($this->items, function ($value, $parameterKey) {
+            $this->offsetSet($parameterKey, $value);
+        });
     }
 
     /**
-     * Push a configuration in via the key
+     * Push a value onto an array configuration value.
      *
      * @since 3.0.0
      *
      * @param string $parameterKey Key to be assigned, which also becomes the property
      * @param mixed $value Value to be assigned to the parameter key
-     * @return null
+     *
+     * @return void
      */
     public function push($parameterKey, $value)
     {
-        $this->items[$parameterKey] = $value;
-        $this->offsetSet($parameterKey, $value);
-    }
+        $array   = $this->get($parameterKey);
+        $array[] = $value;
 
-    /**
-     * Merge a new array into this config
-     *
-     * @since 3.0.0
-     *
-     * @param array $array_to_merge
-     * @return null
-     */
-    public function merge(array $array_to_merge)
-    {
-        $this->items = array_replace_recursive($this->items, $array_to_merge);
-
-        array_walk($this->items, function($value, $parameterKey) {
-            $this->offsetSet($parameterKey, $value);
-        });
+        $this->set($parameterKey, $array);
     }
 
     /**
@@ -210,6 +216,7 @@ class Config extends ArrayObject implements ConfigContract
      *
      * @param array|string $parameterKey Key to be assigned, which also becomes the property
      * @param mixed $value Value to be assigned to the parameter key
+     *
      * @return null
      */
     public function set($parameterKey, $value)
@@ -226,47 +233,53 @@ class Config extends ArrayObject implements ConfigContract
      **************************/
 
     /**
-     * Loads the config file
+     * Checks the sources to ensure loadable.
      *
      * @since 3.0.0
      *
-     * @param string $configFile
-     * @return string
+     * @param mixed $config The configuration to check.
+     * @param mixed $defaults (Optional) The defaults to check.
+     *
+     * @return void
+     * @throws InvalidSourceException
      */
-    protected function loadFile($configFile)
+    protected function checkSources($config, $defaults = '')
     {
-        if ($this->isFileValid($configFile)) {
-            return include $configFile;
+        Validator::mustBeStringOrArray($config);
+        Validator::mustNotBeEmpty($config);
+        if (is_string($config)) {
+            Validator::mustBeLoadable($config);
+        }
+
+        if (empty($defaults)) {
+            return;
+        }
+
+        Validator::mustBeStringOrArray($defaults);
+        if (is_string($defaults)) {
+            Validator::mustBeLoadable($defaults);
         }
     }
 
     /**
-     * Build the config file's full qualified path
+     * Get multiple configuration parameters.
      *
      * @since 3.0.0
      *
-     * @param string $file
+     * @param  array $keys Array of key => default pairs to get.
+     * @param  array
      *
-     * @return bool
-     *
-     * @throws InvalidArgumentException
-     * @throws RuntimeException
+     * @return mixed
      */
-    public function isFileValid($file)
+    protected function getParameters(array $keys)
     {
-        if (!$file) {
-            throw new InvalidArgumentException(__('A config filename must not be empty.', 'fulcrum'));
+        $parameters = [];
+
+        foreach ($keys as $parameterKey => $default) {
+            $parameters[$parameterKey] = $this->get($parameterKey, $default);
         }
 
-        if (!is_readable($file)) {
-            throw new RuntimeException(sprintf(
-                '%s %s',
-                __('The specified config file is not readable', 'fulcrum'),
-                $file
-            ));
-        }
-
-        return true;
+        return $parameters;
     }
 
     /*************************

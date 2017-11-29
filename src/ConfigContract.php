@@ -20,6 +20,7 @@ interface ConfigContract
      *
      * @param  string $parameterKey
      * @param  mixed $default
+     *
      * @return mixed
      */
     public function get($parameterKey, $default = null);
@@ -30,6 +31,7 @@ interface ConfigContract
      * @since 3.0.0
      *
      * @param  string $parameterKey
+     *
      * @return bool
      */
     public function has($parameterKey);
@@ -41,6 +43,7 @@ interface ConfigContract
      *
      * @param string $parameterKey Key to be assigned, which also becomes the property
      * @param mixed $value Value to be assigned to the parameter key
+     *
      * @return null
      */
     public function push($parameterKey, $value);
