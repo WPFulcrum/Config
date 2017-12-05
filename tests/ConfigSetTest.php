@@ -70,7 +70,7 @@ class ConfigSetTest extends TestCase
         $this->assertTrue($config->has('bar.baz'));
 
         // Test that it did not overwrite the array with a string.
-        $this->assertTrue(is_string($config->bar['baz']));
+        $this->assertFalse(is_string($config->bar['baz']));
         $this->assertNotEquals('Overwriting the array', $config->bar['baz']);
 
         // Test that it remains unchanged.
