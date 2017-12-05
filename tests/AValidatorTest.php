@@ -12,31 +12,54 @@ class AValidatorTest extends TestCase
 {
     public function testThrowsErrorWhenSourceIsInvalid()
     {
-        $errorMessage = 'Invalid configuration source. Source must be an array of configuration parameters or a string filesystem path to load the configuration parameters.'; // @codingStandardsIgnoreLine - Generic.Files.LineLength.TooLong
-        Functions\when('__')
-            ->justEcho($errorMessage);
+        $errorMessage = 'Invalid configuration source. Source must be an array of configuration parameters or a ' .
+                        'string filesystem path to load the configuration parameters.';
+        Functions\when('__')->justReturn($errorMessage);
 
-        $this->expectException(InvalidSourceException::class);
-        $this->expectOutputString($errorMessage);
-        Validator::mustBeStringOrArray(null);
+        try {
+            Validator::mustBeStringOrArray(null);
+        } catch (InvalidSourceException $exception) {
+            $this->assertEquals($errorMessage . ': ', $exception->getMessage());
+        }
 
-        $this->expectException(InvalidSourceException::class);
-        $this->expectOutputString($errorMessage);
-        Validator::mustBeStringOrArray(new \stdClass);
+        $source = new \stdClass;
+        try {
+            Validator::mustBeStringOrArray($source);
+        } catch (InvalidSourceException $exception) {
+            $this->assertEquals(
+                $errorMessage . ': ' . print_r($source, true),
+                $exception->getMessage()
+            );
+        }
 
-        $this->expectException(InvalidSourceException::class);
-        $this->expectOutputString($errorMessage);
-        Validator::mustBeStringOrArray(10);
+        try {
+            Validator::mustBeStringOrArray(10);
+        } catch (InvalidSourceException $exception) {
+            $this->assertEquals($errorMessage . ': 10', $exception->getMessage());
+        }
+    }
 
-        // Check the defaults too.
-        $errorMessage = 'Invalid default configuration source. Source must be an array of default configuration parameters or a string filesystem path to load the default configuration parameters.'; // @codingStandardsIgnoreLine - Generic.Files.LineLength.TooLong
-        $this->expectException(InvalidSourceException::class);
-        $this->expectOutputString($errorMessage);
-        Validator::mustBeStringOrArray($this->testArray, new \stdClass);
+    public function testThrowsErrorWhenDefaultsSourceIsInvalid()
+    {
+        $errorMessage = 'Invalid default configuration source. Source must be an array of default configuration ' .
+                        'parameters or a string filesystem path to load the default configuration parameters.';
+        Functions\when('__')->justReturn($errorMessage);
 
-        $this->expectException(InvalidSourceException::class);
-        $this->expectOutputString($errorMessage);
-        Validator::mustBeStringOrArray($this->testArray, 10);
+        $source = new \stdClass;
+        try {
+            Validator::mustBeStringOrArray($source, true);
+        } catch (InvalidSourceException $exception) {
+            $this->assertEquals(
+                $errorMessage . ': ' . print_r($source, true),
+                $exception->getMessage()
+            );
+        }
+
+        try {
+            Validator::mustBeStringOrArray(10, true);
+        } catch (InvalidSourceException $exception) {
+            $this->assertEquals($errorMessage . ': 10', $exception->getMessage());
+        }
     }
 
     public function testReturnsTrueWhenSourceIsValid()
@@ -51,12 +74,16 @@ class AValidatorTest extends TestCase
     public function testThrowsErrorWhenNotAnArray()
     {
         $errorMessage = 'Invalid configuration. The configuration must an array.';
-        Functions\when('__')
-            ->justEcho($errorMessage);
+        Functions\when('__')->justReturn($errorMessage);
 
-        $this->expectException(InvalidConfigException::class);
-        $this->expectOutputString($errorMessage);
-        Validator::mustBeAnArray(require FULCRUM_CONFIG_TESTS_DIR . '/fixtures/invalid-config.php');
+        try {
+            Validator::mustBeAnArray(require FULCRUM_CONFIG_TESTS_DIR . '/fixtures/invalid-config.php');
+        } catch (InvalidConfigException $exception) {
+            $this->assertEquals(
+                $errorMessage . ': ' . print_r(new \stdClass(), true),
+                $exception->getMessage()
+            );
+        }
     }
 
     public function testReturnsTrueWhenAnArray()
@@ -71,15 +98,13 @@ class AValidatorTest extends TestCase
     public function testThrowsErrorWhenSourceIsEmpty()
     {
         $errorMessage = 'Empty configuration source error.  The configuration source cannot be empty.';
-        Functions\when('__')
-            ->justEcho($errorMessage);
-        $this->expectException(InvalidSourceException::class);
-        $this->expectOutputString($errorMessage);
-        Validator::mustNotBeEmpty([]);
+        Functions\when('__')->justReturn($errorMessage);
 
-        $this->expectException(InvalidSourceException::class);
-        $this->expectOutputString($errorMessage);
-        Validator::mustNotBeEmpty('');
+        try {
+            Validator::mustNotBeEmpty('');
+        } catch (InvalidSourceException $exception) {
+            $this->assertEquals($errorMessage . ': ', $exception->getMessage());
+        }
     }
 
     public function testReturnsTrueWhenSourceIsNotEmpty()
@@ -99,13 +124,14 @@ class AValidatorTest extends TestCase
     public function testThrowsErrorWhenFileIsInvalid()
     {
         $file         = 'file-does-not-exist.php';
-        $errorMessage = 'The specified configuration file is not readable: ' . $file;
-        Functions\when('__')
-            ->justEcho($errorMessage);
+        $errorMessage = 'The specified configuration file is not readable';
+        Functions\when('__')->justReturn($errorMessage);
 
-        $this->expectException(InvalidFileException::class);
-        $this->expectOutputString($errorMessage);
-        Validator::mustBeLoadable($file);
+        try {
+            Validator::mustBeLoadable($file);
+        } catch (InvalidFileException $exception) {
+            $this->assertEquals($errorMessage . ': ' . $file, $exception->getMessage());
+        }
     }
 
     public function testReturnsTrueWhenFileIsValid()

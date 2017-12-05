@@ -1,5 +1,9 @@
 # Config Module
 
+[![Build Status](https://travis-ci.org/wpfulcrum/config.svg?branch=develop)](https://travis-ci.org/wpfulcrum/config) 
+[![Latest Stable Version](https://poser.pugx.org/wpfulcrum/config/v/stable)](https://packagist.org/packages/wpfulcrum/config) 
+[![License](https://poser.pugx.org/wpfulcrum/config/license)](https://packagist.org/packages/wpfulcrum/config)
+
 The Fulcrum Config Module provides a runtime configuration component for your WordPress project. It's minimal and lean.
 
 Using dependency injection via the `ConfigContract`, a PHP interface, you are able to inject a specific implementation's configuration for each object.  Forget about hard-coding parameters, as these require you to change them for each implementation or project.  Instead, abstract them into a configuration array and then load that file into `Config`, making your code more readable, reusable, testable, and maintainable.
@@ -34,13 +38,13 @@ Dot notation is a clever mechanism to access deeply nested arrays using a string
 Here let me show you.  Let's say you have a deeply nested array like this one:
 
 ```
-$config = new Config(array(
+$config = new Config([
 	'autoload'  => true,
-	'classname' => 'Fulcrum\FulcrumSite\Shortcode\QA',
-	'config'    => array(
+	'classname' => 'YourBrand\YourProject\Shortcode\QA',
+	'config'    => [
 		'shortcode' => 'qa',
-		'view'      => FULCRUMSITE_PATH . 'src/Shortcode/views/qa.php',
-		'defaults'  => array(
+		'view'      => YOURPLUGIN_PATH . 'src/Shortcode/views/qa.php',
+		'defaults'  => [
 			'id'         => '',
 			'class'      => '',
 			'question'   => '',
@@ -48,9 +52,9 @@ $config = new Config(array(
 			'color'      => '',
 			'open_icon'  => 'fa fa-chevron-down',
 			'close_icon' => 'fa fa-chevron-up',
-		),
-	),
-));
+		],
+	],
+]);
 ```
 
 To get at shortcode's default open icon, you would do `$config->get('default.open_icon)`.  Notice you using "dot" notation you are able to drill down into the array and select the open icon's value.  
@@ -70,10 +74,10 @@ Let's use the configuration example from above, which is for a QA shortcode:
 
 return [
 	'autoload'  => true,
-	'classname' => 'Fulcrum\FulcrumSite\Shortcode\QA',
+	'classname' => 'YourBrand\YourProject\Shortcode\QA',
 	'config'    => [
 		'shortcode' => 'qa',
-		'view'      => FULCRUMSITE_PATH . 'src/Shortcode/views/qa.php',
+		'view'      => YOURPLUGIN_PATH . 'src/Shortcode/views/qa.php',
 		'defaults'  => [
 			'id'         => '',
 			'class'      => '',

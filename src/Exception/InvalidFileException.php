@@ -4,6 +4,6 @@ namespace Fulcrum\Config\Exception;
 
 use InvalidArgumentException;
 
-class InvalidFileException extends InvalidArgumentException implements ConfigExceptionContract
+class InvalidFileException extends InvalidArgumentException
 {
 }

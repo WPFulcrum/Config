@@ -77,7 +77,7 @@ class Config extends ArrayObject implements ConfigContract
         }
 
         // It's a file.
-        $maybeConfig = require $locationOrArray;
+        $maybeConfig = ConfigFactory::loadConfigFile($locationOrArray);
 
         Validator::mustBeAnArray($maybeConfig);
         Validator::mustNotBeEmpty($maybeConfig);
