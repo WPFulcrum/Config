@@ -1,11 +1,10 @@
 <?php
 
-namespace Fulcrum\Config;
+use Fulcrum\Config\ConfigFactory;
 
-class ConfigFactory
-{
+if (!function_exists('fulcrum_create_config')) {
     /**
-     * Load and return the Config object.
+     * Load and return the Config object
      *
      * @since 3.0.0
      *
@@ -16,25 +15,25 @@ class ConfigFactory
      *
      * @returns Fulcrum Returns the Config object
      */
-    public static function create($config, $defaults = '')
+    function fulcrum_create_config($config, $defaults = '')
     {
-        return new Config($config, $defaults);
+        return ConfigFactory::create($config, $defaults);
     }
+}
 
+if (!function_exists('fulcrum_load_config_file')) {
     /**
      * Attempt to load the specified configuration file into memory. If successful, return it.
      *
-     * @since 3.0.2
+     * @since 3.0.0
      *
      * @param string $filePath
      * @param string $errorMessage
      *
      * @return array
      */
-    public static function loadConfigFile($filePath, $errorMessage = '')
+    function fulcrum_load_config_file($filePath, $errorMessage = '')
     {
-        if (true === Validator::mustBeLoadable($filePath, $errorMessage)) {
-            return require $filePath;
-        }
+        return ConfigFactory::loadConfigFile($filePath, $errorMessage);
     }
 }

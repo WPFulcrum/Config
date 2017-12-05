@@ -20,4 +20,15 @@ class ConfigFactoryTest extends TestCase
 
         $this->assertInstanceOf(Config::class, ConfigFactory::create($this->testArrayPath, $this->defaultsPath));
     }
+
+    public function testShouldReturnLoadConfig()
+    {
+        $actual = ConfigFactory::loadConfigFile($this->testArrayPath);
+        $this->assertArrayHasKey('foo', $actual);
+        $this->assertArrayHasKey('bar', $actual);
+        $this->assertEquals([
+            'aaa',
+            'bbb',
+        ], $actual['array']);
+    }
 }

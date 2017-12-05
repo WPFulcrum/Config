@@ -1,6 +1,8 @@
 # Config Module
 
-[![Latest Stable Version](https://poser.pugx.org/wpfulcrum/config/v/stable)](https://packagist.org/packages/wpfulcrum/config) [![License](https://poser.pugx.org/wpfulcrum/config/license)](https://packagist.org/packages/wpfulcrum/config)
+[![Build Status](https://travis-ci.org/wpfulcrum/config.svg?branch=develop)](https://travis-ci.org/wpfulcrum/config) 
+[![Latest Stable Version](https://poser.pugx.org/wpfulcrum/config/v/stable)](https://packagist.org/packages/wpfulcrum/config) 
+[![License](https://poser.pugx.org/wpfulcrum/config/license)](https://packagist.org/packages/wpfulcrum/config)
 
 The Fulcrum Config Module provides a runtime configuration component for your WordPress project. It's minimal and lean.
 

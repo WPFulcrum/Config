@@ -4,6 +4,6 @@ namespace Fulcrum\Config\Exception;
 
 use Exception;
 
-class InvalidSourceException extends Exception implements ConfigExceptionContract
+class InvalidSourceException extends Exception
 {
 }

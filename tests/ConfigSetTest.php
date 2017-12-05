@@ -3,7 +3,6 @@
 namespace Fulcrum\Config\Tests;
 
 use Fulcrum\Config\Config;
-use PHPUnit_Framework_Constraint_IsType as IsType;
 
 class ConfigSetTest extends TestCase
 {
@@ -13,12 +12,12 @@ class ConfigSetTest extends TestCase
 
         // Able to change the value and data type.
         $originalValue = $config->foo;
-        $newValue = 'Software development is fun!';
-        $this->assertInternalType(IsType::TYPE_ARRAY, $config->foo);
+        $newValue      = 'Software development is fun!';
+        $this->assertTrue(is_array($config->foo));
 
         $config->foo = $newValue;
         $this->assertTrue($config->has('foo'));
-        $this->assertInternalType(IsType::TYPE_STRING, $config->foo);
+        $this->assertTrue(is_string($config->foo));
         $this->assertNotEquals($originalValue, $config->foo);
         $this->assertEquals($newValue, $config->foo);
         $this->assertEquals($newValue, $config->get('foo'));
@@ -40,11 +39,11 @@ class ConfigSetTest extends TestCase
         // Able to change the value and data type.
         $originalValue = $config->bar['baz'];
         $newValue      = 'Overwriting the array';
-        $this->assertInternalType('array', $config->bar['baz']);
+        $this->assertTrue(is_array($config->bar['baz']));
         $config->bar['baz'] = 'Overwriting the array';
         $config->set('bar.baz', $newValue);
         $this->assertTrue($config->has('bar.baz'));
-        $this->assertInternalType(IsType::TYPE_STRING, $config->bar['baz']);
+        $this->assertTrue(is_string($config->bar['baz']));
         $this->assertNotEquals($originalValue, $config->get('bar.baz'));
         $this->assertEquals($newValue, $config->bar['baz']);
         $this->assertEquals($config->get('bar.baz'), $config->bar['baz']);
@@ -64,18 +63,18 @@ class ConfigSetTest extends TestCase
         $config = new Config($this->testArray, $this->defaults);
 
         $originalValue = $config->bar['baz'];
-        $this->assertInternalType(IsType::TYPE_ARRAY, $originalValue);
+        $this->assertTrue(is_array($originalValue));
 
         $config->bar['baz'] = 'Overwriting the array';
 
         $this->assertTrue($config->has('bar.baz'));
 
         // Test that it did not overwrite the array with a string.
-        $this->assertNotInternalType(IsType::TYPE_STRING, $config->bar['baz']);
+        $this->assertTrue(is_string($config->bar['baz']));
         $this->assertNotEquals('Overwriting the array', $config->bar['baz']);
 
         // Test that it remains unchanged.
-        $this->assertInternalType(IsType::TYPE_ARRAY, $config->bar['baz']);
+        $this->assertTrue(is_array($config->bar['baz']));
         $this->assertEquals($originalValue, $config->bar['baz']);
         $this->assertEquals($originalValue, $config->get('bar.baz'));
         $this->assertEquals($config->bar['baz'], $config->get('bar.baz'));
