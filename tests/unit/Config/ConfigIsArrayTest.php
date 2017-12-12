@@ -1,10 +1,10 @@
 <?php
 
-namespace Fulcrum\Config\Tests;
+namespace Fulcrum\Tests\Unit\Config;
 
 use Fulcrum\Config\Config;
 
-class ConfigIsArrayTest extends TestCase
+class ConfigIsArrayTest extends ConfigTestCase
 {
     public function testIsArray()
     {

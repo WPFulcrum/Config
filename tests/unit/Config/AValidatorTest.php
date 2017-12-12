@@ -1,6 +1,6 @@
 <?php
 
-namespace Fulcrum\Config\Tests;
+namespace Fulcrum\Tests\Unit\Config;
 
 use Brain\Monkey\Functions;
 use Fulcrum\Config\Exception\InvalidConfigException;
@@ -8,7 +8,9 @@ use Fulcrum\Config\Exception\InvalidFileException;
 use Fulcrum\Config\Exception\InvalidSourceException;
 use Fulcrum\Config\Validator;
 
-class AValidatorTest extends TestCase
+require_once __DIR__ . '/ConfigTestCase.php';
+
+class AValidatorTest extends ConfigTestCase
 {
     public function testThrowsErrorWhenSourceIsInvalid()
     {
@@ -77,7 +79,7 @@ class AValidatorTest extends TestCase
         Functions\when('__')->justReturn($errorMessage);
 
         try {
-            Validator::mustBeAnArray(require FULCRUM_CONFIG_TESTS_DIR . '/fixtures/invalid-config.php');
+            Validator::mustBeAnArray(require __DIR__ . '/fixtures/invalid-config.php');
         } catch (InvalidConfigException $exception) {
             $this->assertEquals(
                 $errorMessage . ': ' . print_r(new \stdClass(), true),

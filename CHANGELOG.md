@@ -1,6 +1,10 @@
 CHANGELOG
 =========
 
+3.0.4
+- Standardized tests architecture
+- Standardized `phpcs.xml.dist`
+
 3.0.3
 - Added `remove` functionality.
 

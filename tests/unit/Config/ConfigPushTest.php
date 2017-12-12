@@ -1,10 +1,10 @@
 <?php
 
-namespace Fulcrum\Config\Tests;
+namespace Fulcrum\Tests\Unit\Config;
 
 use Fulcrum\Config\Config;
 
-class ConfigPushTest extends TestCase
+class ConfigPushTest extends ConfigTestCase
 {
     public function testShouldPushNewElements()
     {

@@ -1,10 +1,10 @@
 <?php
 
-namespace Fulcrum\Config\Tests;
+namespace Fulcrum\Tests\Unit\Config;
 
 use Fulcrum\Config\Config;
 
-class ConfigRemoveTest extends TestCase
+class ConfigRemoveTest extends ConfigTestCase
 {
     public function testShouldUnsetParameter()
     {

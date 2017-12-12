@@ -1,10 +1,10 @@
 <?php
 
-namespace Fulcrum\Config\Tests;
+namespace Fulcrum\Tests\Unit\Config;
 
 use Fulcrum\Config\Config;
 
-class ConfigSetTest extends TestCase
+class ConfigSetTest extends ConfigTestCase
 {
     public function testSetChangesValue()
     {
