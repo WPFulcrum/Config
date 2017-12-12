@@ -28,6 +28,8 @@ class Config extends ArrayObject implements ConfigContract
      *                                  configuration array.
      * @param  string|array $defaults Specify a defaults array, which is then merged together
      *                                  with the initial config array before creating the object.
+     *
+     * @throws InvalidSourceException
      */
     public function __construct($config, $defaults = '')
     {
@@ -116,20 +118,6 @@ class Config extends ArrayObject implements ConfigContract
     }
 
     /**
-     * Checks if the parameters exists.  Uses dot notation for multidimensional keys.
-     *
-     * @since 3.0.0
-     *
-     * @param  string $parameterKey Parameter key, specified in dot notation, i.e. key.key.key
-     *
-     * @return bool
-     */
-    public function has($parameterKey)
-    {
-        return DotArray::has($this->items, $parameterKey);
-    }
-
-    /**
      * Get the specified configuration value.
      *
      * @since 3.0.0
@@ -146,6 +134,20 @@ class Config extends ArrayObject implements ConfigContract
         }
 
         return DotArray::get($this->items, $parameterKey, $default);
+    }
+
+    /**
+     * Checks if the parameters exists.  Uses dot notation for multidimensional keys.
+     *
+     * @since 3.0.0
+     *
+     * @param  string $parameterKey Parameter key, specified in dot notation, i.e. key.key.key
+     *
+     * @return bool
+     */
+    public function has($parameterKey)
+    {
+        return DotArray::has($this->items, $parameterKey);
     }
 
     /**
@@ -210,18 +212,32 @@ class Config extends ArrayObject implements ConfigContract
     }
 
     /**
-     * Push a configuration in via the key
+     * Remove a parameter from the configuration.
+     *
+     * @since 3.0.3
+     *
+     * @param array|string $dotNotationKeys Key to be unset.
+     *
+     * @return null
+     */
+    public function remove($dotNotationKeys)
+    {
+        DotArray::remove($this->items, $dotNotationKeys);
+    }
+
+    /**
+     * Set a new value for the given item in the configuration.
      *
      * @since 3.0.0
      *
-     * @param array|string $parameterKey Key to be assigned, which also becomes the property
+     * @param array|string $dotNotationKeys Key to be assigned, which also becomes the property
      * @param mixed $value Value to be assigned to the parameter key
      *
      * @return null
      */
-    public function set($parameterKey, $value)
+    public function set($dotNotationKeys, $value)
     {
-        $keys = is_array($parameterKey) ? $parameterKey : [$parameterKey => $value];
+        $keys = is_array($dotNotationKeys) ? $dotNotationKeys : [$dotNotationKeys => $value];
 
         foreach ($keys as $key => $value) {
             DotArray::set($this->items, $key, $value);
@@ -303,6 +319,6 @@ class Config extends ArrayObject implements ConfigContract
 
     public function offsetUnset($key)
     {
-        $this->set($key, null);
+        $this->remove($key);
     }
 }

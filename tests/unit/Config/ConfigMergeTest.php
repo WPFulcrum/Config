@@ -1,10 +1,10 @@
 <?php
 
-namespace Fulcrum\Config\Tests;
+namespace Fulcrum\Tests\Unit\Config;
 
 use Fulcrum\Config\Config;
 
-class ConfigMergeTest extends TestCase
+class ConfigMergeTest extends ConfigTestCase
 {
     public function testMergeShouldMergeNewItems()
     {

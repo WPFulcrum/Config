@@ -1,11 +1,11 @@
 <?php
 
-namespace Fulcrum\Config\Tests;
+namespace Fulcrum\Tests\Unit\Config;
 
 use Fulcrum\Config\Config;
 use Fulcrum\Config\ConfigFactory;
 
-class ConfigFactoryTest extends TestCase
+class ConfigFactoryTest extends ConfigTestCase
 {
     public function testCreateWhenGivenAnArray()
     {

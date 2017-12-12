@@ -1,10 +1,10 @@
 <?php
 
-namespace Fulcrum\Config\Tests;
+namespace Fulcrum\Tests\Unit\Config;
 
 use Fulcrum\Config\Config;
 
-class ConfigGetTest extends TestCase
+class ConfigGetTest extends ConfigTestCase
 {
     public function testGetShouldReturnValue()
     {

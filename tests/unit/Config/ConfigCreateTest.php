@@ -1,6 +1,6 @@
 <?php
 
-namespace Fulcrum\Config\Tests;
+namespace Fulcrum\Tests\Unit\Config;
 
 use Brain\Monkey\Functions;
 use Fulcrum\Config\Config;
@@ -8,7 +8,7 @@ use Fulcrum\Config\Exception\InvalidConfigException;
 use Fulcrum\Config\Exception\InvalidFileException;
 use Fulcrum\Config\Exception\InvalidSourceException;
 
-class ConfigCreateTest extends TestCase
+class ConfigCreateTest extends ConfigTestCase
 {
     public function testCreateWhenGivenAnArray()
     {
@@ -122,7 +122,7 @@ class ConfigCreateTest extends TestCase
 
     public function testThrowsErrorWhenLoadedConfigIsInvalid()
     {
-        $file         = FULCRUM_CONFIG_TESTS_DIR . '/fixtures/invalid-config.php';
+        $file         = __DIR__ . '/fixtures/invalid-config.php';
         $errorMessage = 'Invalid configuration. The configuration must an array.';
         Functions\when('__')->justReturn($errorMessage);
 

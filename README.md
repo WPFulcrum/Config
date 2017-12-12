@@ -176,6 +176,19 @@ $qaShortcode = new QA(
 );
 ```
 
+## Working With a Configuration
+
+There are several methods available for you to work with the configuration within your objects.
+
+- `all()` - Retrieves all of the runtime configuration parameters
+- `get($dotNotationKeys, $default = null)` - Gets the specified configuration value by the `$dotNotationKeys`.  The key can be "dot" notation.
+- `has($dotNotationKeys)` - Determines if the specified configuration value exists.  The key can be "dot" notation.
+- `isArray($dotNotationKeys, $validWhenEmpty = null)` - Checks if the given "dot" notation key is a valid array.
+- `merge(array $arrayToMerge)` - Merges a new array into this config.
+- `push($parameterKey, $value)` - Pushes the value into the configuration.
+- `remove($dotNotationKeys)` - Remove an item from the configuration.
+- `set($dotNotationKeys, $value)` - Set a new value for the given item in the configuration.
+
 ## Contributing
 
 All feedback, bug reports, and pull requests are welcome.

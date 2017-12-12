@@ -1,10 +1,10 @@
 <?php
 
-namespace Fulcrum\Config\Tests;
+namespace Fulcrum\Tests\Unit\Config;
 
 use Fulcrum\Config\Config;
 
-class ConfigHasTest extends TestCase
+class ConfigHasTest extends ConfigTestCase
 {
     public function testDoesNotHaveItem()
     {
